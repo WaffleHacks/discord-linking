@@ -22,7 +22,7 @@ class User(db.Model):
 class Link(db.Model):
     __tablename__ = "links"
 
-    user = db.relationship("User", backref=db.backref("link", lazy=True))
+    user = db.relationship("User", backref=db.backref("link", uselist=False))
     user_id = db.Column(db.String(64), db.ForeignKey("users.id"), primary_key=True)
 
     id = db.Column(db.String(64), nullable=False)
