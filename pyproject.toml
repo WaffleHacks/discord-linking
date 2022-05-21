@@ -9,7 +9,6 @@ packages = [{include = "discord_linking"}]
 [tool.poetry.dependencies]
 python = "^3.9"
 Flask = "^2.1.2"
-pydantic = "^1.9.1"
 python-dotenv = "^0.20.0"
 
 
