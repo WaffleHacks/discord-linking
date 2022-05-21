@@ -1,8 +1,9 @@
 from flask import Flask
 
-from .database import init as init_database
+from . import database, oauth
 
 app = Flask(__name__)
 app.config.from_object("discord_linking.settings")
 
-init_database(app)
+database.init(app)
+oauth.init(app)
