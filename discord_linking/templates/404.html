@@ -1,0 +1,16 @@
+{% extends "_layout.html" %}
+
+{% from "_macros.html" import link %}
+
+{% block title %}Not Found{% endblock %}
+{% block header %}{{ header("Not Found") }}{% endblock %}
+
+{% block content %}
+  <p class="text-center">
+    The page you are looking for couldn't be found.
+    Please check it is correct and try again.
+  </p>
+  <div class="flex justify-center mt-5">
+    {{ link("Return home", "/") }}
+  </div>
+{% endblock %}

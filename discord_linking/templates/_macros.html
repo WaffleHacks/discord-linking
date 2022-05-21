@@ -1,0 +1,17 @@
+{% macro header(title="Discord Community") -%}
+  <div class="sm:mx-auto sm:w-full sm:max-w-md">
+    <img class="mx-auto h-24 w-auto rounded-full" src="{{ url_for('static', filename='logo.png') }}" alt="WaffleHacks Logo" />
+    <h2 class="mt-6 text-center text-3xl font-extrabold text-gray-900">{{ title }}</h2>
+  </div>
+{%- endmacro %}
+
+{% macro link(content, to, external=False) -%}
+  <a
+      class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+      href="{{ to }}"
+      target="{% if external %}_blank{% else %}_self{% endif %}"
+      rel="noreferrer"
+  >
+    {{ content }}
+  </a>
+{%- endmacro %}

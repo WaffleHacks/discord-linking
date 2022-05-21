@@ -1,0 +1,24 @@
+{% from "_macros.html" import header %}
+<!DOCTYPE html>
+<html lang="en" class="h-full bg-gray-100">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>{% block title %}WaffleHacks Community Discord{% endblock %}</title>
+
+    <link href="{{ url_for("static", filename="bundle.css") }}" rel="stylesheet" type="text/css" />
+    {% block assets %}{% endblock %}
+  </head>
+  <body class="h-full">
+    <div class="min-h-full py-12 sm:px-6 lg:px-8">
+      {% block header %}{{ header() }}{% endblock %}
+
+      <div class="mt-8 sm:mx-auto sm:w-full sm:max-w-lg">
+        <div class="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
+          {% block content %}{% endblock %}
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
