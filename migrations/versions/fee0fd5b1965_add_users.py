@@ -1,13 +1,12 @@
 """add users
 
 Revision ID: fee0fd5b1965
-Revises: 
+Revises:
 Create Date: 2022-05-21 01:04:51.467232
 
 """
-from alembic import op
 import sqlalchemy as sa
-
+from alembic import op
 
 # revision identifiers, used by Alembic.
 revision = "fee0fd5b1965"
