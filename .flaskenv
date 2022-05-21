@@ -1,0 +1,1 @@
+FLASK_APP=discord_linking:app
