@@ -39,3 +39,11 @@ def fetch(user: str) -> Profile:
         last_name=raw["lastName"],
         email=raw["email"],
     )
+
+
+def invalidate(user: str):
+    """
+    Invalidate a user's cached profile
+    :param user: the user's ID
+    """
+    cache.delete_memoized(fetch, user)

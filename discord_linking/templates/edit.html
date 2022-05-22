@@ -55,7 +55,7 @@
           <p class="mt-1 text-xs text-gray-400">
             Your first and last name are automatically set in your profile. Edit them at
             <a href="https://id.wafflehacks.org" class="text-blue-500 underline hover:no-underline">id.wafflehacks.org</a>.
-            <a href="#" class="text-gray-500 underline hover:no-underline">Refresh name</a>
+            <a href="{{ url_for('refresh') }}" class="text-gray-500 underline hover:no-underline">Refresh name</a>
           </p>
         </div>
         {{ checkbox("code-of-conduct", "Code of Conduct", "https://mlh.io/code-of-conduct", checked=g.user.agreed_to_code_of_conduct, link_title="MLH Code of Conduct") }}

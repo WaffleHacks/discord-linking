@@ -94,6 +94,12 @@ def unlink():
     return redirect(url_for("index"))
 
 
+@app.get("/refresh")
+def refresh():
+    profiles.invalidate(g.user.id)
+    return redirect(url_for("edit"))
+
+
 @app.errorhandler(404)
 def not_found(*_):
     return render_template("404.html"), 404
