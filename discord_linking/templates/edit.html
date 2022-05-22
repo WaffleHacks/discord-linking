@@ -47,11 +47,10 @@
     {% include "_card_head.html" %}
     <form class="space-y-8 divide-y divide-gray-100 py-4" method="post" action="{{ url_for('edit') }}">
       <div class="space-y-6">
-        {# TODO: get first and last name from profiles service #}
         <div>
           <div class="flex sm:space-x-8">
-            {{ disabled_input("first_name", "First Name", "Placeholder") }}
-            {{ disabled_input("last_name", "Last Name", "Placeholder") }}
+            {{ disabled_input("first_name", "First Name", g.user.profile.first_name) }}
+            {{ disabled_input("last_name", "Last Name", g.user.profile.last_name) }}
           </div>
           <p class="mt-1 text-xs text-gray-400">
             Your first and last name are automatically set in your profile. Edit them at
