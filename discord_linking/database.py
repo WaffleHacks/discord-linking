@@ -1,6 +1,8 @@
 from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
 
+from . import profiles
+
 db = SQLAlchemy()
 migrate = Migrate(db=db)
 
@@ -21,6 +23,10 @@ class User(db.Model):
     @property
     def agreed(self):
         return self.agreed_to_rules and self.agreed_to_code_of_conduct
+
+    @property
+    def profile(self):
+        return profiles.fetch(self.id)
 
 
 class Link(db.Model):

@@ -1,6 +1,6 @@
 from flask import Flask, g, redirect, render_template, request, session, url_for
 
-from . import auth0, database, discord, oauth
+from . import auth0, database, discord, oauth, profiles
 from .database import User, db
 
 app = Flask(__name__)
@@ -8,6 +8,7 @@ app.config.from_object("discord_linking.settings")
 
 database.init(app)
 oauth.init(app)
+profiles.init(app)
 
 app.register_blueprint(auth0.app, url_prefix="/auth0")
 app.register_blueprint(discord.app, url_prefix="/discord")

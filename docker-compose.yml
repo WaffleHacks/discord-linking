@@ -10,5 +10,10 @@ services:
     ports:
       - "3532:5432"
 
+  cache:
+    image: redis:6-alpine
+    ports:
+      - "3579:6379"
+
 networks:
   default:

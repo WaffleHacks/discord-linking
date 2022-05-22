@@ -34,3 +34,8 @@ AUTH0_SERVER_METADATA_URL = f"https://{auth0_domain}/.well-known/openid-configur
 # Discord configuration
 DISCORD_CLIENT_ID = environ.get("DISCORD_CLIENT_ID")
 DISCORD_CLIENT_SECRET = environ.get("DISCORD_CLIENT_SECRET")
+
+# Caching configuration
+CACHE_TYPE = "RedisCache"
+CACHE_KEY_PREFIX = "discord-linking:"
+CACHE_REDIS_URL = environ.get("REDIS_URL")
