@@ -1,0 +1,20 @@
+{% extends "_layout.html" %}
+
+{% from "_macros.html" import link %}
+
+{% block header %}
+  {% if title %}
+    {{ header(title) }}
+  {% else %}
+    {{ header("An error occurred") }}
+  {% endif %}
+{% endblock %}
+
+{% block content %}
+  <p class="text-center">
+    {{ error }}
+  </p>
+  <div class="flex justify-center mt-5">
+    {{ link("Try again", "/") }}
+  </div>
+{% endblock %}

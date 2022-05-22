@@ -1,4 +1,4 @@
-from flask import Flask, g, render_template, request, session, url_for
+from flask import Flask, g, redirect, render_template, request, session, url_for
 
 from . import auth0, database, discord, oauth
 from .database import User
@@ -15,8 +15,12 @@ app.register_blueprint(discord.app, url_prefix="/discord")
 
 @app.before_request
 def require_login():
-    # Ignore static resources
-    if request.path.startswith("/static") or request.path == "/favicon.ico":
+    # Ignore static resources and errors
+    if (
+        request.path.startswith("/static")
+        or request.path == "/favicon.ico"
+        or request.path == url_for("error")
+    ):
         return
 
     # Handle initial login
@@ -36,6 +40,18 @@ def require_login():
 @app.get("/")
 def index():
     return render_template("index.html")
+
+
+@app.get("/error")
+def error():
+    if "error" not in session:
+        return redirect(url_for("index"))
+
+    return render_template(
+        "error.html",
+        error=session.pop("error"),
+        title=session.pop("error:title", None),
+    )
 
 
 @app.errorhandler(404)

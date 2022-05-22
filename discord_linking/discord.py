@@ -1,4 +1,5 @@
-from flask import Blueprint, g, redirect, url_for
+from authlib.integrations.base_client.errors import OAuthError
+from flask import Blueprint, g, redirect, session, url_for
 
 from .database import Link, db
 from .oauth import registry
@@ -19,7 +20,15 @@ def login():
 @app.get("/callback")
 def callback():
     # Complete the login flow
-    token = registry.discord.authorize_access_token()
+    try:
+        token = registry.discord.authorize_access_token()
+    except OAuthError:
+        session["error"] = (
+            "It looks like you cancelled the linking process. To access our Discord "
+            "community, you must allow WaffleHacks to view your Discord username and avatar."
+        )
+        session["error:title"] = "Operation cancelled"
+        return redirect(url_for("error"))
 
     # Get the user's info
     user_info = registry.discord.userinfo(token=token)

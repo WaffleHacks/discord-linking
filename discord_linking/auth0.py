@@ -30,6 +30,10 @@ def callback():
 
     # Only allow participants to link their accounts
     if not is_participant(token["access_token"]):
+        session["error"] = (
+            "Only participants can link their Discord accounts. "
+            "Please DM an organizer be admitted into the Discord."
+        )
         return redirect(url_for("error"))
 
     user = User(id=userinfo["sub"])
