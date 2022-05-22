@@ -7,3 +7,9 @@
     {% include "index/_buttons.html" %}
   </div>
 {% endblock %}
+
+{% block footer %}
+  <div class="mt-2 flex justify-center">
+    <a href="{{ url_for('unlink') }}" class="text-xs text-center text-gray-500 hover:underline">Unlink your Discord</a>
+  </div>
+{% endblock %}

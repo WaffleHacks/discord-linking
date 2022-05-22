@@ -1,7 +1,7 @@
 from flask import Flask, g, redirect, render_template, request, session, url_for
 
 from . import auth0, database, discord, oauth
-from .database import User
+from .database import User, db
 
 app = Flask(__name__)
 app.config.from_object("discord_linking.settings")
@@ -59,6 +59,15 @@ def error():
 @app.get("/logout")
 def logout():
     session.clear()
+    return redirect(url_for("index"))
+
+
+@app.get("/unlink")
+def unlink():
+    if g.user.link:
+        db.session.delete(g.user.link)
+        db.session.commit()
+
     return redirect(url_for("index"))
 
 
