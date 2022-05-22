@@ -1,7 +1,7 @@
 {% from "_macros.html" import link %}
 
 <div class="flex justify-around pt-4">
-  {{ link("Edit Profile", "#", secondary=True, class="w-full mx-3") }}
+  {{ link("Edit Profile", url_for("edit"), secondary=True, class="w-full mx-3") }}
   {% if g.user.agreed %}
     {{ link("Launch Discord", "https://wffl.link/discord", class="w-full mx-3") }}
   {% endif %}

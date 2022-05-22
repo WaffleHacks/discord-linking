@@ -1,0 +1,76 @@
+{% extends "_layout.html" %}
+
+{% from "_macros.html" import button %}
+
+{% macro checkbox(field, title, link, checked=False, link_title=None) -%}
+  <div class="relative flex items-start">
+    <div class="flex items-center h-5">
+      <input
+          id="{{ field }}"
+          aria-describedby="{{ field }}-description"
+          name="{{ field }}"
+          type="checkbox"
+          class="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300 rounded"
+          {% if checked %}checked{% endif %}
+      />
+    </div>
+    <div class="ml-3 text-sm">
+      <label for="{{ field }}" class="font-bold text-gray-700">{{ title }}</label>
+      <p id="{{ field }}-description" class="text-gray-500">
+        I have read and agree to the
+        <a href="{{ link }}" rel="noreferrer" target="_blank" class="text-blue-500 underline hover:no-underline">
+          {% if link_title %}{{ link_title }}{% else %}{{ title }}{% endif %}
+        </a>
+      </p>
+    </div>
+  </div>
+{%- endmacro %}
+
+{% macro disabled_input(field, title, value) -%}
+  <div>
+    <label for="{{ field }}" class="block text-sm font-bold text-gray-700">{{ title }}</label>
+    <div class="mt-1">
+      <input
+          id="{{ field }}"
+          name="{{ field }}"
+          value="{{ value }}"
+          type="text"
+          disabled="disabled"
+          class="block w-full shadow-sm sm:text-sm border border-solid border-gray-300 box-shadow rounded-md px-3 py-2 bg-gray-200 cursor-not-allowed text-gray-600"
+      />
+    </div>
+  </div>
+{%- endmacro %}
+
+{% block content %}
+  <div class="divide-y divide-gray-100 space-y-5">
+    {% include "_card_head.html" %}
+    <form class="space-y-8 divide-y divide-gray-100 py-4" method="post" action="{{ url_for('edit') }}">
+      <div class="space-y-6">
+        {# TODO: get first and last name from profiles service #}
+        <div>
+          <div class="flex sm:space-x-8">
+            {{ disabled_input("first_name", "First Name", "Placeholder") }}
+            {{ disabled_input("last_name", "Last Name", "Placeholder") }}
+          </div>
+          <p class="mt-1 text-xs text-gray-400">
+            Your first and last name are automatically set in your profile. Edit them at
+            <a href="https://id.wafflehacks.org" class="text-blue-500 underline hover:no-underline">id.wafflehacks.org</a>.
+            <a href="#" class="text-gray-500 underline hover:no-underline">Refresh name</a>
+          </p>
+        </div>
+        {{ checkbox("code-of-conduct", "Code of Conduct", "https://mlh.io/code-of-conduct", checked=g.user.agreed_to_code_of_conduct, link_title="MLH Code of Conduct") }}
+        {{ checkbox("rules", "Discord Rules", "https://discord.com/channels/962465669910257735/962466304151912588", checked=g.user.agreed_to_rules) }}
+      </div>
+
+      <div>
+        <div class="flex pt-4">
+          {{ button("Submit", type="submit", class="w-full mx-5") }}
+        </div>
+        {% if error %}
+          <p class="mt-2 text-sm text-center text-red-600">{{ error }}</p>
+        {% endif %}
+      </div>
+    </form>
+  </div>
+{% endblock %}

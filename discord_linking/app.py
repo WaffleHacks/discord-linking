@@ -38,10 +38,32 @@ def require_login():
         session["discord:login"] = True
         return discord.login()
 
+    # Only show status page if already linked
+    if not g.user.agreed and request.path != url_for("edit"):
+        return redirect(url_for("edit"))
+
 
 @app.get("/")
 def index():
     return render_template("index.html")
+
+
+@app.route("/edit", methods=["GET", "POST"])
+def edit():
+    if request.method == "POST":
+        g.user.agreed_to_rules = request.form.get("rules") == "on"
+        g.user.agreed_to_code_of_conduct = request.form.get("code-of-conduct") == "on"
+        db.session.commit()
+
+        if g.user.agreed:
+            return redirect(url_for("index"))
+        else:
+            return render_template(
+                "edit.html",
+                error="You must accept the rules and code of conduct to access the WaffleHacks Discord",
+            )
+
+    return render_template("edit.html")
 
 
 @app.get("/error")
