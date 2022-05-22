@@ -24,7 +24,9 @@ def require_login():
         return
 
     # Handle initial login
-    if request.path != url_for("auth0.callback") and "id" not in session:
+    if request.path == url_for("auth0.callback"):
+        return
+    elif "id" not in session:
         session["auth0:login"] = True
         return auth0.login()
 
@@ -52,6 +54,12 @@ def error():
         error=session.pop("error"),
         title=session.pop("error:title", None),
     )
+
+
+@app.get("/logout")
+def logout():
+    session.clear()
+    return redirect(url_for("index"))
 
 
 @app.errorhandler(404)

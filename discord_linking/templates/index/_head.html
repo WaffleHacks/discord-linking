@@ -9,7 +9,7 @@
     </div>
     <div class="mt-1 text-gray-500 text-xs">
       Not you?
-      <a class="underline hover:no-underline" href="#">Logout</a>
+      <a class="underline hover:no-underline" href="{{ url_for('logout') }}">Logout</a>
     </div>
   </div>
   <img class="bg-gray-100 rounded-full flex-shrink-0 w-12 h-12" alt="{{ g.user.link.username }} profile picture" src="{{ g.user.link.profile_url }}" />
