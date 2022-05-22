@@ -1,3 +1,6 @@
+import base64
+import json
+
 from flask import Blueprint, redirect, session, url_for
 from sqlalchemy.exc import IntegrityError
 
@@ -12,8 +15,11 @@ def login():
     Initiate the login flow for Auth0
     :return: redirect to Auth0
     """
-    url = url_for("auth0.callback", _external=True)
-    return registry.auth0.authorize_redirect(url)
+    return registry.auth0.authorize_redirect(
+        url_for("auth0.callback", _external=True),
+        # TODO: create dedicated audience for discord account linking
+        audience="https://apply.wafflehacks.org",
+    )
 
 
 @app.get("/callback")
@@ -21,6 +27,10 @@ def callback():
     # Complete the login flow
     token = registry.auth0.authorize_access_token()
     userinfo = token["userinfo"]
+
+    # Only allow participants to link their accounts
+    if not is_participant(token["access_token"]):
+        return redirect(url_for("error"))
 
     user = User(id=userinfo["sub"])
 
@@ -55,3 +65,35 @@ def callback():
 
     session["id"] = user.id
     return redirect(url_for("index"))
+
+
+def decode_jwt(raw):
+    """
+    Decode the payload of a JWT without verifying it
+    :param raw: the JWT
+    :return: a payload dictionary
+    """
+    [_, payload, _] = raw.split(".", 2)
+
+    padding_needed = len(payload) % 4
+    if padding_needed > 0:
+        payload += "=" * (4 - padding_needed)
+
+    decoded = base64.urlsafe_b64decode(payload)
+    return json.loads(decoded)
+
+
+def is_participant(raw):
+    """
+    Determine if a given token belongs to a participant
+    :param raw: the raw JWT string
+    :return: whether the token owner is a participant
+    """
+    payload = decode_jwt(raw)
+    permissions = payload.get("permissions")
+    if type(permissions) == list:
+        return "participant" in permissions
+    elif type(permissions) == str:
+        return permissions == "participant"
+    else:
+        return True
