@@ -2,5 +2,7 @@
 
 <div class="flex justify-around pt-4">
   {{ link("Edit Profile", "#", secondary=True, class="w-full mx-3") }}
-  {{ link("Launch Discord", "https://wffl.link/discord", class="w-full mx-3") }}
+  {% if g.user.agreed %}
+    {{ link("Launch Discord", "https://wffl.link/discord", class="w-full mx-3") }}
+  {% endif %}
 </div>

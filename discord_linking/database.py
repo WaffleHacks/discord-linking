@@ -18,6 +18,10 @@ class User(db.Model):
     agreed_to_rules = db.Column(db.Boolean, nullable=False, default=False)
     agreed_to_code_of_conduct = db.Column(db.Boolean, nullable=False, default=False)
 
+    @property
+    def agreed(self):
+        return self.agreed_to_rules and self.agreed_to_code_of_conduct
+
 
 class Link(db.Model):
     __tablename__ = "links"
