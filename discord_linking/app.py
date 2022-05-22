@@ -1,6 +1,6 @@
 from flask import Flask, g, redirect, render_template, request, session, url_for
 
-from . import auth0, database, discord, oauth, profiles
+from . import auth0, database, discord, internal, oauth, profiles
 from .database import User, db
 
 app = Flask(__name__)
@@ -12,6 +12,7 @@ profiles.init(app)
 
 app.register_blueprint(auth0.app, url_prefix="/auth0")
 app.register_blueprint(discord.app, url_prefix="/discord")
+app.register_blueprint(internal.app, url_prefix="/internal")
 
 
 @app.before_request
@@ -19,6 +20,7 @@ def require_login():
     # Ignore static resources and errors
     if (
         request.path.startswith("/static")
+        or request.path.startswith("/internal")
         or request.path == "/favicon.ico"
         or request.path == url_for("error")
     ):
