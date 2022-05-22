@@ -1,0 +1,33 @@
+{% macro accepted(title, ok) -%}
+  <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium {% if ok %}bg-green-100 text-green-800{% else %}bg-red-100 text-red-800{% endif %}">
+    {{ title }}
+  </span>
+{%- endmacro %}
+
+<div class="py-4">
+  <dl class="grid grid-cols-1 gap-x-4 gap-y-6 sm:grid-cols-2">
+    <div class="sm:col-span-1">
+      <dt class="text-sm font-bold text-gray-600">Name</dt>
+      <dd class="mt-1 text-sm text-black break-all">
+        {# TODO: get name from application portal #}
+        Placeholder
+      </dd>
+    </div>
+    <div class="sm:col-span-1">
+      <dt class="text-sm font-bold text-gray-600">Accepted</dt>
+      <dd class="mt-1 text-sm text-black break-all">
+        {{ accepted("Code of Conduct", g.user.agreed_to_code_of_conduct) }}
+        {{ accepted("Rules", g.user.agreed_to_rules) }}
+      </dd>
+    </div>
+    <div class="sm:col-span-2">
+      <dt class="text-sm font-bold text-gray-600">Your application</dt>
+      <dd class="mt-1 text-sm text-black break-all">
+        Go to
+        <a class="text-blue-500 underline hover:no-underline" href="https://apply.wafflehacks.org" target="_blank" rel="noreferrer">
+          apply.wafflehacks.org
+        </a>
+      </dd>
+    </div>
+  </dl>
+</div>
