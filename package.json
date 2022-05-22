@@ -1,7 +1,7 @@
 {
   "scripts": {
     "css:dev": "yarn postcss ./static -o ./discord_linking/static/bundle.css -w",
-    "css": "NODE_ENV=production yarn postcss ./static -o ./discord_linking/static/bundle.css"
+    "css": "NODE_ENV=production yarn postcss ./static -o ./bundle.css"
   },
   "devDependencies": {
     "@tailwindcss/forms": "^0.5.2",
