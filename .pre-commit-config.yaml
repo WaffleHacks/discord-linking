@@ -23,6 +23,15 @@ repos:
     hooks:
       - id: black
         language_version: python3.9
+  - repo: local
+    hooks:
+      - id: eslint
+        name: eslint
+        entry: node ./infrastructure/node_modules/eslint/bin/eslint.js
+        args:
+          - --fix
+        language: system
+        files: ^infrastructure/.*\.ts$
 
 default_language_version:
   python: python3.9
