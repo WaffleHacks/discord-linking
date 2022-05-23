@@ -1,5 +1,5 @@
 {
-  "name": "infrastructure",
+  "name": "@wafflehacks/discord-linking",
   "version": "0.1.0",
   "description": "A Pulumi component for setting up Discord linking",
   "main": "lib/index.js",
