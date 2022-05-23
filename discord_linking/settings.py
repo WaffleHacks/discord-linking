@@ -39,3 +39,9 @@ DISCORD_CLIENT_SECRET = environ.get("DISCORD_CLIENT_SECRET")
 CACHE_TYPE = "RedisCache"
 CACHE_KEY_PREFIX = "discord-linking:"
 CACHE_REDIS_URL = environ.get("REDIS_URL")
+
+# Internal API configuration
+APPLICATION_PORTAL_URL = environ.get(
+    "APPLICATION_PORTAL_URL",
+    "http://integrations.application-portal.wafflemaker.internal:8000",
+)

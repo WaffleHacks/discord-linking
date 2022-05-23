@@ -78,6 +78,7 @@ def error():
         "error.html",
         error=session.pop("error"),
         title=session.pop("error:title", None),
+        try_again=session.pop("error:try-again", True),
     )
 
 
