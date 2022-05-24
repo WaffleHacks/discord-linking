@@ -15,6 +15,9 @@ DEBUG = (
     or raw_debug == "1"
 )
 
+# Default to HTTPS external redirects in production
+PREFERRED_URL_SCHEME = "http" if DEBUG else "https"
+
 # Cookie signing key
 SECRET_KEY = environ.get("SECRET_KEY") or hexlify(urandom(32)).decode()
 
