@@ -1,5 +1,6 @@
 import traceback
 
+from authlib.integrations.base_client.errors import MismatchingStateError
 from flask import Flask, g, redirect, render_template, request, session, url_for
 from opentelemetry import trace
 
@@ -118,6 +119,11 @@ def refresh():
 @app.errorhandler(404)
 def not_found(*_):
     return render_template("404.html"), 404
+
+
+@app.errorhandler(MismatchingStateError)
+def mismatching_state(*_):
+    return redirect(url_for("index"))
 
 
 @app.errorhandler(Exception)
