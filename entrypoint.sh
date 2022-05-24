@@ -1,6 +1,6 @@
 #!/bin/sh
 
-FLASK_APP=discord_linking:app flask db migrate
+FLASK_APP=discord_linking:app flask db upgrade
 exec gunicorn \
   --access-logfile - \
   --bind '[::]:8000' \
