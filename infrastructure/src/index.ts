@@ -48,6 +48,13 @@ class DiscordLinking extends ComponentResource {
         signingAlg: 'RS256',
         skipConsentForVerifiableFirstPartyClients: true,
 
+        scopes: [
+          {
+            value: 'can-link',
+            description: 'Allows the user to link their Discord with their application',
+          },
+        ],
+
         // Enable RBAC
         enforcePolicies: true,
         tokenDialect: 'access_token_authz',
