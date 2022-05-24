@@ -16,7 +16,11 @@ def login():
     # Only redirect if participant is allowed to link their account
     if can_link():
         return registry.discord.authorize_redirect(
-            url_for("discord.callback", _external=True)
+            url_for(
+                "discord.callback",
+                _external=True,
+                _scheme="http" if current_app.debug else "https",
+            )
         )
     else:
         session["error"] = (

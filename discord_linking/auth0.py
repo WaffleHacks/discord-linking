@@ -1,7 +1,7 @@
 import base64
 import json
 
-from flask import Blueprint, redirect, session, url_for
+from flask import Blueprint, current_app, redirect, session, url_for
 from sqlalchemy.exc import IntegrityError
 
 from .database import Link, User, db
@@ -16,7 +16,11 @@ def login():
     :return: redirect to Auth0
     """
     return registry.auth0.authorize_redirect(
-        url_for("auth0.callback", _external=True),
+        url_for(
+            "auth0.callback",
+            _external=True,
+            _scheme="http" if current_app.debug else "https",
+        ),
         audience="https://discord.wafflehacks.org",
     )
 
