@@ -1,4 +1,5 @@
 from os import environ
+from sys import stderr
 
 from opentelemetry import trace
 from opentelemetry.exporter.otlp.proto.grpc.trace_exporter import OTLPSpanExporter
@@ -12,7 +13,7 @@ from opentelemetry.sdk.trace import TracerProvider
 from opentelemetry.sdk.trace.export import BatchSpanProcessor
 
 otel_enable = environ.get("OTEL_ENABLE", "no").lower()
-should_enable = (
+enabled = (
     otel_enable == "yes"
     or otel_enable == "y"
     or otel_enable == "true"
@@ -21,8 +22,8 @@ should_enable = (
 
 
 def init(app, db):
-    if should_enable:
-        print(" * OpenTelemetry: enabled")
+    if enabled:
+        print(" * OpenTelemetry: enabled", file=stderr)
 
         # Setup the exporter
         processor = BatchSpanProcessor(OTLPSpanExporter())
@@ -41,4 +42,4 @@ def init(app, db):
         with app.app_context():
             SQLAlchemyInstrumentor().instrument(engine=db.engine)
     else:
-        print(" * OpenTelemetry: disabled")
+        print(" * OpenTelemetry: disabled", file=stderr)

@@ -1,3 +1,5 @@
+import traceback
+
 from flask import Flask, g, redirect, render_template, request, session, url_for
 from opentelemetry import trace
 
@@ -120,4 +122,6 @@ def not_found(*_):
 
 @app.errorhandler(Exception)
 def internal_server(*_):
+    if not tracing.enabled:
+        traceback.print_exc()
     return render_template("500.html"), 500
