@@ -62,6 +62,9 @@ RUN yarn css
 # The final app
 FROM base
 
+# Install libpq
+RUN apt-get install -y --no-install-recommends libpq-dev
+
 # Switch to a new user
 RUN adduser --disabled-password app
 USER app
@@ -69,9 +72,6 @@ USER app
 EXPOSE 8000/tcp
 
 WORKDIR /discord-linking
-
-# Install libpq
-RUN apt-get install -y --no-install-recommends libpq
 
 # Copy over dependencies from other steps
 COPY --from=dependencies --chown=app /dependencies /usr/local
