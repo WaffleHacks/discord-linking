@@ -5,6 +5,7 @@ from opentelemetry.exporter.otlp.proto.grpc.trace_exporter import OTLPSpanExport
 from opentelemetry.instrumentation.botocore import BotocoreInstrumentor
 from opentelemetry.instrumentation.flask import FlaskInstrumentor
 from opentelemetry.instrumentation.jinja2 import Jinja2Instrumentor
+from opentelemetry.instrumentation.redis import RedisInstrumentor
 from opentelemetry.instrumentation.requests import RequestsInstrumentor
 from opentelemetry.instrumentation.sqlalchemy import SQLAlchemyInstrumentor
 from opentelemetry.sdk.trace import TracerProvider
@@ -24,6 +25,7 @@ def init(app, db):
         BotocoreInstrumentor().instrument()
         FlaskInstrumentor().instrument_app(app)
         Jinja2Instrumentor().instrument()
+        RedisInstrumentor().instrument()
         RequestsInstrumentor().instrument()
 
         with app.app_context():

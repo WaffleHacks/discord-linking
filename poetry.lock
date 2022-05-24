@@ -635,6 +635,24 @@ instruments = ["jinja2 (>=2.7,<4.0)"]
 test = ["opentelemetry-test-utils (==0.30b1)", "markupsafe (==2.0.1)", "jinja2 (>=2.7,<4.0)"]
 
 [[package]]
+name = "opentelemetry-instrumentation-redis"
+version = "0.30b1"
+description = "OpenTelemetry Redis instrumentation"
+category = "main"
+optional = false
+python-versions = ">=3.6"
+
+[package.dependencies]
+opentelemetry-api = ">=1.3,<2.0"
+opentelemetry-instrumentation = "0.30b1"
+opentelemetry-semantic-conventions = "0.30b1"
+wrapt = ">=1.12.1"
+
+[package.extras]
+instruments = ["redis (>=2.6)"]
+test = ["opentelemetry-test-utils (==0.30b1)", "opentelemetry-sdk (>=1.3,<2.0)", "redis (>=2.6)"]
+
+[[package]]
 name = "opentelemetry-instrumentation-requests"
 version = "0.30b1"
 description = "OpenTelemetry requests instrumentation"
@@ -1130,7 +1148,7 @@ testing = ["pytest (>=6)", "pytest-checkdocs (>=2.4)", "pytest-flake8", "pytest-
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.9"
-content-hash = "4b786a661f807f4a1bb812b7275652ba7535fe77a00a87b0a133e9c5e1d7ed9f"
+content-hash = "ea12670f9041afad81253e9d114a54047ebb852c859a4c27d95d9cde53918e8b"
 
 [metadata.files]
 alembic = [
@@ -1564,6 +1582,10 @@ opentelemetry-instrumentation-flask = [
 opentelemetry-instrumentation-jinja2 = [
     {file = "opentelemetry-instrumentation-jinja2-0.30b1.tar.gz", hash = "sha256:3fa46ad43b7fc61657cca2a88010d771cb336a5eb356e50eb15caa2ff8177833"},
     {file = "opentelemetry_instrumentation_jinja2-0.30b1-py3-none-any.whl", hash = "sha256:19687fb182dc609f4541ce089688bbeeefd6614241dd0ef72d2c17393d4c18f1"},
+]
+opentelemetry-instrumentation-redis = [
+    {file = "opentelemetry-instrumentation-redis-0.30b1.tar.gz", hash = "sha256:09f931de2f5860ed0ab8095cbfa75d24b078a6f7a888f6b2d7b41fb7ce75fd54"},
+    {file = "opentelemetry_instrumentation_redis-0.30b1-py3-none-any.whl", hash = "sha256:0513100249d0f8b749b50b291ed0f411f9a1b3ac18adcbe2f9ff6cecdd8fdaf2"},
 ]
 opentelemetry-instrumentation-requests = [
     {file = "opentelemetry-instrumentation-requests-0.30b1.tar.gz", hash = "sha256:d05ff3cbcd725c31cd72a16d28b8b5d85d028c6c5ee0b25e34d2e1a8fea7dfc9"},
