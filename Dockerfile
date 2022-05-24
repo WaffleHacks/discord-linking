@@ -70,6 +70,9 @@ EXPOSE 8000/tcp
 
 WORKDIR /discord-linking
 
+# Install libpq
+RUN apt-get install -y --no-install-recommends libpq
+
 # Copy over dependencies from other steps
 COPY --from=dependencies --chown=app /dependencies /usr/local
 COPY --from=css --chown=app /bundle.css ./discord_linking/static/
