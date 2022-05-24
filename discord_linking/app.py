@@ -1,8 +1,8 @@
 from flask import Flask, g, redirect, render_template, request, session, url_for
+from opentelemetry import trace
 
 from . import auth0, database, discord, internal, oauth, profiles, tracing
 from .database import User, db
-from .tracing import tracer
 
 app = Flask(__name__)
 app.config.from_object("discord_linking.settings")
@@ -15,6 +15,8 @@ tracing.init(app, db)
 app.register_blueprint(auth0.app, url_prefix="/auth0")
 app.register_blueprint(discord.app, url_prefix="/discord")
 app.register_blueprint(internal.app, url_prefix="/internal")
+
+tracer = trace.get_tracer(__name__)
 
 
 @app.before_request
@@ -37,6 +39,7 @@ def require_login():
 
     # Get the user's profile
     g.user = User.query.filter_by(id=session["id"]).first()
+    trace.get_current_span().set_attribute("user.id", g.user.id)
 
     # Handle linking
     if request.path != url_for("discord.callback") and g.user.link is None:
@@ -56,9 +59,12 @@ def index():
 @app.route("/edit", methods=["GET", "POST"])
 def edit():
     if request.method == "POST":
-        g.user.agreed_to_rules = request.form.get("rules") == "on"
-        g.user.agreed_to_code_of_conduct = request.form.get("code-of-conduct") == "on"
-        db.session.commit()
+        with tracer.start_as_current_span("update"):
+            g.user.agreed_to_rules = request.form.get("rules") == "on"
+            g.user.agreed_to_code_of_conduct = (
+                request.form.get("code-of-conduct") == "on"
+            )
+            db.session.commit()
 
         if g.user.agreed:
             return redirect(url_for("index"))
@@ -92,16 +98,18 @@ def logout():
 
 @app.get("/unlink")
 def unlink():
-    if g.user.link:
-        db.session.delete(g.user.link)
-        db.session.commit()
+    with tracer.start_as_current_span("delete"):
+        if g.user.link:
+            db.session.delete(g.user.link)
+            db.session.commit()
 
     return redirect(url_for("index"))
 
 
 @app.get("/refresh")
 def refresh():
-    profiles.invalidate(g.user.id)
+    with tracer.start_as_current_span("invalidate-cache"):
+        profiles.invalidate(g.user.id)
     return redirect(url_for("edit"))
 
 
