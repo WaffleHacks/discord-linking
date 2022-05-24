@@ -2,6 +2,7 @@ from flask import Flask, g, redirect, render_template, request, session, url_for
 
 from . import auth0, database, discord, internal, oauth, profiles, tracing
 from .database import User, db
+from .tracing import tracer
 
 app = Flask(__name__)
 app.config.from_object("discord_linking.settings")
@@ -107,3 +108,8 @@ def refresh():
 @app.errorhandler(404)
 def not_found(*_):
     return render_template("404.html"), 404
+
+
+@app.errorhandler(Exception)
+def internal_server(*_):
+    return render_template("500.html"), 500

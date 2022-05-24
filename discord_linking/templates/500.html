@@ -1,0 +1,23 @@
+{% extends "_layout.html" %}
+
+{% from "_macros.html" import link %}
+
+{% block title %}Unexpected error{% endblock %}
+{% block header %}{{ header("An unexpected error occurred") }}{% endblock %}
+
+{% block content %}
+  <p class="text-center">
+    An unexpected error occurred while processing your request.
+    Please come back and try again later.
+  </p>
+  <p class="mt-3 text-center">
+    If the error persists, please send an email to
+    <a href="mailto:technology@wafflehacks.org" class="text-blue-500 underline hover:no-underline">
+      technology@wafflehacks.org
+    </a>
+    or create a bug report
+    <a href="https://github.com/WaffleHacks/discord-linking/issues/new" class="text-blue-500 underline hover:no-underline">
+      here
+    </a>.
+  </p>
+{% endblock %}
