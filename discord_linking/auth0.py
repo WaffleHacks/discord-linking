@@ -17,8 +17,7 @@ def login():
     """
     return registry.auth0.authorize_redirect(
         url_for("auth0.callback", _external=True),
-        # TODO: create dedicated audience for discord account linking
-        audience="https://apply.wafflehacks.org",
+        audience="https://discord.wafflehacks.org",
     )
 
 
