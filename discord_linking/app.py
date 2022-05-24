@@ -3,15 +3,15 @@ import traceback
 from flask import Flask, g, redirect, render_template, request, session, url_for
 from opentelemetry import trace
 
-from . import auth0, database, discord, internal, oauth, profiles, tracing
+from . import auth0, database, dependencies, discord, internal, oauth, tracing
 from .database import User, db
 
 app = Flask(__name__)
 app.config.from_object("discord_linking.settings")
 
 database.init(app)
+dependencies.init(app)
 oauth.init(app)
-profiles.init(app)
 tracing.init(app, db)
 
 app.register_blueprint(auth0.app, url_prefix="/auth0")
@@ -111,7 +111,7 @@ def unlink():
 @app.get("/refresh")
 def refresh():
     with tracer.start_as_current_span("invalidate-cache"):
-        profiles.invalidate(g.user.id)
+        dependencies.invalidate_profile(g.user.id)
     return redirect(url_for("edit"))
 
 

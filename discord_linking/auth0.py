@@ -47,7 +47,7 @@ def callback():
 
     # Determine if the participant can be pre-emptively linked since they signed in with Discord
     with tracer.start_as_current_span("pre-emptive-link"):
-        if user.id.startswith("oauth2|discord|"):
+        if user.id.startswith("oauth2|discord|") and user.can_link:
             # Get the username and discriminator from the user info
             # The `nickname` property will ALWAYS have the full username in the format <username>#<discriminator>
             [username, discriminator] = userinfo["nickname"].split("#")

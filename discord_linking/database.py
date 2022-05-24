@@ -1,7 +1,7 @@
 from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
 
-from . import profiles
+from . import dependencies
 
 db = SQLAlchemy()
 migrate = Migrate(db=db)
@@ -26,7 +26,11 @@ class User(db.Model):
 
     @property
     def profile(self):
-        return profiles.fetch(self.id)
+        return dependencies.fetch_profile(self.id)
+
+    @property
+    def can_link(self):
+        return dependencies.can_link(self.id)
 
 
 class Link(db.Model):

@@ -1,4 +1,3 @@
-import requests
 from authlib.integrations.base_client.errors import OAuthError
 from flask import Blueprint, current_app, g, redirect, session, url_for
 from opentelemetry import trace
@@ -16,7 +15,7 @@ def login():
     :return: redirect to Discord
     """
     # Only redirect if participant is allowed to link their account
-    if can_link():
+    if g.user.can_link:
         return registry.discord.authorize_redirect(
             url_for(
                 "discord.callback",
@@ -68,16 +67,3 @@ def callback():
         db.session.commit()
 
     return redirect(url_for("index"))
-
-
-def can_link():
-    """
-    Check if the participant is allowed to link their account
-    :return: whether the participant can link
-    """
-    with tracer.start_as_current_span("can-link"):
-        base = current_app.config["APPLICATION_PORTAL_URL"]
-        response = requests.get(base + f"/discord/can-link?id={g.user.id}")
-        response.raise_for_status()
-
-        return response.json().get("status", False)
