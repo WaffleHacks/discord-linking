@@ -5,6 +5,7 @@ from flask import Blueprint, current_app, redirect, session, url_for
 from opentelemetry import trace
 from sqlalchemy.exc import IntegrityError
 
+from . import error
 from .database import Link, User, db
 from .oauth import registry
 
@@ -37,7 +38,7 @@ def callback():
     # Only allow participants to link their accounts
     with tracer.start_as_current_span("can-start-linking"):
         if not is_participant(token["access_token"]):
-            session["error"] = (
+            error.set(
                 "Only participants can link their Discord accounts. "
                 "Please DM an organizer be admitted into the Discord."
             )
