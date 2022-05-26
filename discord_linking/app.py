@@ -49,8 +49,24 @@ def require_login():
         del session["discord:login"]
         return
     elif request.path != url_for("discord.callback") and g.user.link is None:
-        session["discord:login"] = True
-        return discord.login()
+        # Only redirect if participant is allowed to link their account
+        if g.user.can_link:
+            session["discord:login"] = True
+            return discord.login()
+        else:
+            return render_template(
+                "error.html",
+                title="You can't do that yet",
+                message=(
+                    "Before you can join the community Discord, your application needs to be accepted. This should "
+                    "happen within a week of applying.<br/><br/>If you haven't applied yet, go to <a "
+                    'href="https://apply.wafflehacks.org" class="text-blue-500 underline '
+                    "hover:no-underline\">apply.wafflehacks.org</a> to get started. It'll only take 5-10 minutes to "
+                    "complete.<br/><br/>If you think you received this in error, please send us an email at <a "
+                    'href="" class="text-blue-500 underline hover:no-underline"></a>.'
+                ),
+                disable_try_again=True,
+            )
 
     # Only show status page if already linked
     if not g.user.agreed and request.path != url_for("edit"):

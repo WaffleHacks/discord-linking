@@ -14,29 +14,13 @@ def login():
     Initiate the linking flow for Discord
     :return: redirect to Discord
     """
-    # Only redirect if participant is allowed to link their account
-    if g.user.can_link:
-        return registry.discord.authorize_redirect(
-            url_for(
-                "discord.callback",
-                _external=True,
-                _scheme="http" if current_app.debug else "https",
-            )
+    return registry.discord.authorize_redirect(
+        url_for(
+            "discord.callback",
+            _external=True,
+            _scheme="http" if current_app.debug else "https",
         )
-    else:
-        return render_template(
-            "error.html",
-            title="You can't do that yet",
-            message=(
-                "Before you can join the community Discord, your application needs to be accepted. This should happen "
-                "within a week of applying.<br/><br/>If you haven't applied yet, go to <a "
-                'href="https://apply.wafflehacks.org" class="text-blue-500 underline hover:no-underline">'
-                "apply.wafflehacks.org</a> to get started. It'll only take 5-10 minutes to complete.<br/><br/>If you "
-                'think you received this in error, please send us an email at <a href="" class="text-blue-500 '
-                'underline hover:no-underline"></a>.'
-            ),
-            disable_try_again=True,
-        )
+    )
 
 
 @app.get("/callback")
