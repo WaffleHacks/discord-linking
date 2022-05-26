@@ -29,7 +29,6 @@ def require_login():
         request.path.startswith("/static")
         or request.path.startswith("/internal")
         or request.path == "/favicon.ico"
-        or request.path == url_for("error")
     ):
         return
 
@@ -82,19 +81,6 @@ def edit():
             )
 
     return render_template("edit.html")
-
-
-@app.get("/error")
-def error():
-    if "error" not in session:
-        return redirect(url_for("index"))
-
-    return render_template(
-        "error.html",
-        error=session.pop("error"),
-        title=session.pop("error:title", None),
-        try_again=session.pop("error:try-again", True),
-    )
 
 
 @app.get("/logout")

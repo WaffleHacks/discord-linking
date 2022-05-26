@@ -1,8 +1,7 @@
 from authlib.integrations.base_client.errors import OAuthError
-from flask import Blueprint, current_app, g, redirect, url_for
+from flask import Blueprint, current_app, g, redirect, render_template, url_for
 from opentelemetry import trace
 
-from . import error
 from .database import Link, db
 from .oauth import registry
 
@@ -25,17 +24,19 @@ def login():
             )
         )
     else:
-        error.set(
-            "Before you can join the community Discord, your application needs to be accepted. This should happen "
-            "within a week of applying.<br/><br/>If you haven't applied yet, go to <a "
-            'href="https://apply.wafflehacks.org" class="text-blue-500 underline hover:no-underline">'
-            "apply.wafflehacks.org</a> to get started. It'll only take 5-10 minutes to complete.<br/><br/>If you think "
-            'you received this in error, please send us an email at <a href="" class="text-blue-500 underline '
-            'hover:no-underline"></a>.',
+        return render_template(
+            "error.html",
             title="You can't do that yet",
-            try_again=False,
+            message=(
+                "Before you can join the community Discord, your application needs to be accepted. This should happen "
+                "within a week of applying.<br/><br/>If you haven't applied yet, go to <a "
+                'href="https://apply.wafflehacks.org" class="text-blue-500 underline hover:no-underline">'
+                "apply.wafflehacks.org</a> to get started. It'll only take 5-10 minutes to complete.<br/><br/>If you "
+                'think you received this in error, please send us an email at <a href="" class="text-blue-500 '
+                'underline hover:no-underline"></a>.'
+            ),
+            disable_try_again=True,
         )
-        return redirect(url_for("error"))
 
 
 @app.get("/callback")
@@ -45,12 +46,14 @@ def callback():
         try:
             token = registry.discord.authorize_access_token()
         except OAuthError:
-            error.set(
-                "It looks like you cancelled the linking process. To access our Discord "
-                "community, you must allow WaffleHacks to view your Discord username and avatar.",
+            return render_template(
+                "error.html",
+                message=(
+                    "It looks like you cancelled the linking process. To access our Discord "
+                    "community, you must allow WaffleHacks to view your Discord username and avatar."
+                ),
                 title="Operation cancelled",
             )
-            return redirect(url_for("error"))
 
     # Get the user's info
     user_info = registry.discord.userinfo(token=token)

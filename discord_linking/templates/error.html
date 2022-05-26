@@ -13,9 +13,9 @@
 {% block content %}
   <p class="text-center">
     {# errors are always static and do not have any user-controlled content #}
-    {{ error | safe }}
+    {{ message | safe }}
   </p>
-  {% if try_again %}
+  {% if not disable_try_again %}
     <div class="flex justify-center mt-5">
       {{ link("Try again", "/") }}
     </div>
