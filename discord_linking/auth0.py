@@ -43,6 +43,7 @@ def callback():
                     "Only participants can link their Discord accounts. "
                     "Please DM an organizer be admitted into the Discord."
                 ),
+                disable_try_again=True,
             )
 
     user = User(id=userinfo["sub"])

@@ -63,9 +63,9 @@ def require_login():
                     'href="https://apply.wafflehacks.org" class="text-blue-500 underline '
                     "hover:no-underline\">apply.wafflehacks.org</a> to get started. It'll only take 5-10 minutes to "
                     "complete.<br/><br/>If you think you received this in error, please send us an email at <a "
-                    'href="" class="text-blue-500 underline hover:no-underline"></a>.'
+                    'href="mailto:team@wafflehacks.org" class="text-blue-500 underline hover:no-underline">'
+                    "team@wafflehacks.org</a>."
                 ),
-                disable_try_again=True,
             )
 
     # Only show status page if already linked
