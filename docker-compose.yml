@@ -15,5 +15,11 @@ services:
     ports:
       - "3579:6379"
 
+  jaeger:
+    image: jaegertracing/all-in-one:1.34
+    ports:
+      - "3531:6831/udp"
+      - "3586:16686"
+
 networks:
   default:

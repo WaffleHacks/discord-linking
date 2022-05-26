@@ -2,6 +2,7 @@ from os import environ
 from sys import stderr
 
 from opentelemetry import trace
+from opentelemetry.exporter.jaeger.thrift import JaegerExporter
 from opentelemetry.exporter.otlp.proto.grpc.trace_exporter import OTLPSpanExporter
 from opentelemetry.instrumentation.botocore import BotocoreInstrumentor
 from opentelemetry.instrumentation.flask import FlaskInstrumentor
@@ -23,10 +24,16 @@ enabled = (
 
 def init(app, db):
     if enabled:
-        print(" * OpenTelemetry: enabled", file=stderr)
+        # Select the exporter
+        if app.debug:
+            print("OpenTelemetry: Jaeger", file=stderr)
+            exporter = JaegerExporter(agent_port=3531)
+        else:
+            print("OpenTelemetry: OTLP", file=stderr)
+            exporter = OTLPSpanExporter()
 
         # Setup the exporter
-        processor = BatchSpanProcessor(OTLPSpanExporter())
+        processor = BatchSpanProcessor(exporter)
         provider = TracerProvider()
         provider.add_span_processor(processor)
 
