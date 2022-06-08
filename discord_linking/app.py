@@ -90,6 +90,7 @@ def edit():
             db.session.commit()
 
         if g.user.agreed:
+            nats.publish("linked")
             return redirect(url_for("index"))
         else:
             return render_template(
@@ -110,6 +111,8 @@ def logout():
 def unlink():
     with tracer.start_as_current_span("delete"):
         if g.user.link:
+            nats.publish("unlinked")
+
             g.user.reset()
             db.session.delete(g.user.link)
             db.session.commit()

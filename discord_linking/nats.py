@@ -1,4 +1,5 @@
 import json
+from contextlib import asynccontextmanager
 
 from flask import current_app, g
 from nats import NATS
@@ -27,26 +28,39 @@ async def __connect(app=current_app) -> JetStreamContext:
     return __client.jetstream()
 
 
+@asynccontextmanager
+async def __connection(app=current_app):
+    """
+    Get a NATS connection
+    """
+    client = NATS()
+    await client.connect(servers=[app.config["NATS_URL"]])
+
+    try:
+        yield client.jetstream()
+    finally:
+        await client.close()
+
+
 def create_stream(app=current_app):
     """
     Create a new stream if it doesn't already exist
     """
 
     async def inner():
-        jetstream = await __connect(app)
-
-        try:
-            await jetstream.stream_info(STREAM_NAME)
-        except NotFoundError:
-            await jetstream.add_stream(
-                name=STREAM_NAME,
-                subjects=[f"{STREAM_NAME}.*"],
-                description="for the Discord linking service",
-                storage=StorageType.FILE,
-                retention=RetentionPolicy.LIMITS,
-                num_replicas=1,
-                max_age=60 * 60 * 24 * 180,  # 6 months
-            )
+        async with __connection(app) as jetstream:
+            try:
+                await jetstream.stream_info(STREAM_NAME)
+            except NotFoundError:
+                await jetstream.add_stream(
+                    name=STREAM_NAME,
+                    subjects=[f"{STREAM_NAME}.*"],
+                    description="for the Discord linking service",
+                    storage=StorageType.FILE,
+                    retention=RetentionPolicy.LIMITS,
+                    num_replicas=1,
+                    max_age=60 * 60 * 24 * 180,  # 6 months
+                )
 
     app.ensure_sync(inner)()
 
@@ -57,16 +71,15 @@ def publish(event: str):
     """
 
     async def inner():
-        jetstream = await __connect()
+        async with __connection() as jetstream:
+            # Inject tracing
+            headers = {}
+            __propagator.inject(headers)
 
-        # Inject tracing
-        headers = {}
-        __propagator.inject(headers)
+            # Encode the body
+            body = {"id": g.user.id}
+            encoded = json.dumps(body).encode("utf-8")
 
-        # Encode the body
-        body = {"id": g.user.id}
-        encoded = json.dumps(body).encode("utf-8")
-
-        await jetstream.publish(f"{STREAM_NAME}.{event}", encoded, headers=headers)
+            await jetstream.publish(f"{STREAM_NAME}.{event}", encoded, headers=headers)
 
     current_app.ensure_sync(inner)()

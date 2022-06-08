@@ -54,4 +54,4 @@ def callback():
         db.session.add(link)
         db.session.commit()
 
-    return redirect(url_for("index"))
+    return redirect(url_for("edit"))

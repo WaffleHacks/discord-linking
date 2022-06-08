@@ -80,7 +80,7 @@ def callback():
             pass
 
     session["id"] = user.id
-    return redirect(url_for("index"))
+    return redirect(url_for("edit"))
 
 
 def decode_jwt(raw):
