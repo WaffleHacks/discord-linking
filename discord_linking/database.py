@@ -32,6 +32,10 @@ class User(db.Model):
     def can_link(self):
         return dependencies.can_link(self.id)
 
+    def reset(self):
+        self.agreed_to_rules = False
+        self.agreed_to_code_of_conduct = False
+
 
 class Link(db.Model):
     __tablename__ = "links"

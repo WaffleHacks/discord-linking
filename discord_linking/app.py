@@ -4,7 +4,7 @@ from authlib.integrations.base_client.errors import MismatchingStateError
 from flask import Flask, g, redirect, render_template, request, session, url_for
 from opentelemetry import trace
 
-from . import auth0, database, dependencies, discord, internal, oauth, tracing
+from . import auth0, database, dependencies, discord, internal, nats, oauth, tracing
 from .database import User, db
 
 app = Flask(__name__)
@@ -12,6 +12,7 @@ app.config.from_object("discord_linking.settings")
 
 database.init(app)
 dependencies.init(app)
+nats.init(app)
 oauth.init(app)
 tracing.init(app, db)
 
@@ -33,7 +34,7 @@ def require_login():
         return
 
     # Handle initial login
-    if session.get("auth0:login"):
+    if session.get("auth0:login") and request.path == url_for("auth0.callback"):
         del session["auth0:login"]
         return
     elif "id" not in session:
@@ -45,7 +46,7 @@ def require_login():
     trace.get_current_span().set_attribute("user.id", g.user.id)
 
     # Handle linking
-    if session.get("discord:login"):
+    if session.get("discord:login") and request.path == url_for("discord.callback"):
         del session["discord:login"]
         return
     elif request.path != url_for("discord.callback") and g.user.link is None:
@@ -89,6 +90,7 @@ def edit():
             db.session.commit()
 
         if g.user.agreed:
+            nats.publish("linked")
             return redirect(url_for("index"))
         else:
             return render_template(
@@ -109,6 +111,9 @@ def logout():
 def unlink():
     with tracer.start_as_current_span("delete"):
         if g.user.link:
+            nats.publish("unlinked")
+
+            g.user.reset()
             db.session.delete(g.user.link)
             db.session.commit()
 
