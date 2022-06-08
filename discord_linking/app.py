@@ -110,6 +110,7 @@ def logout():
 def unlink():
     with tracer.start_as_current_span("delete"):
         if g.user.link:
+            g.user.reset()
             db.session.delete(g.user.link)
             db.session.commit()
 
