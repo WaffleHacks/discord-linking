@@ -4,7 +4,7 @@ from authlib.integrations.base_client.errors import MismatchingStateError
 from flask import Flask, g, redirect, render_template, request, session, url_for
 from opentelemetry import trace
 
-from . import auth0, database, dependencies, discord, internal, oauth, tracing
+from . import auth0, database, dependencies, discord, internal, nats, oauth, tracing
 from .database import User, db
 
 app = Flask(__name__)
@@ -12,6 +12,7 @@ app.config.from_object("discord_linking.settings")
 
 database.init(app)
 dependencies.init(app)
+nats.init(app)
 oauth.init(app)
 tracing.init(app, db)
 

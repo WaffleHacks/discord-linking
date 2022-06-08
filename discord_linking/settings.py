@@ -45,3 +45,6 @@ APPLICATION_PORTAL_URL = environ.get(
     "APPLICATION_PORTAL_URL",
     "http://integrations.application-portal.wafflemaker.internal:8000",
 )
+
+# The NATS JetStream server to connect to
+NATS_URL = environ.get("NATS_URL", "nats://127.0.0.1:3542")
