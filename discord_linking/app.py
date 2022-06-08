@@ -34,7 +34,7 @@ def require_login():
         return
 
     # Handle initial login
-    if session.get("auth0:login"):
+    if session.get("auth0:login") and request.path == url_for("auth0.callback"):
         del session["auth0:login"]
         return
     elif "id" not in session:
@@ -46,7 +46,7 @@ def require_login():
     trace.get_current_span().set_attribute("user.id", g.user.id)
 
     # Handle linking
-    if session.get("discord:login"):
+    if session.get("discord:login") and request.path == url_for("discord.callback"):
         del session["discord:login"]
         return
     elif request.path != url_for("discord.callback") and g.user.link is None:
