@@ -1,6 +1,6 @@
 {% extends "_layout.html" %}
 
-{% from "_macros.html" import link %}
+{% from "_macros.html" import button %}
 
 {% block header %}
   {% if title %}
@@ -17,7 +17,7 @@
   </p>
   {% if not disable_try_again %}
     <div class="flex justify-center mt-5">
-      {{ link("Try again", "/") }}
+      {{ button("Try again", onclick="window.location.reload()") }}
     </div>
   {% endif %}
 {% endblock %}
