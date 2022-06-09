@@ -140,4 +140,8 @@ def mismatching_state(*_):
 @app.errorhandler(Exception)
 def internal_server(*_):
     traceback.print_exc()
-    return render_template("500.html"), 500
+
+    span = trace.get_current_span()
+    ctx = span.get_span_context()
+
+    return render_template("500.html", trace_id=ctx.trace_id), 500
