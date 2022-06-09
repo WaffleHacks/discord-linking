@@ -77,7 +77,7 @@ def publish(event: str):
             __propagator.inject(headers)
 
             # Encode the body
-            body = {"id": g.user.id}
+            body = {"id": g.user.link.id}
             encoded = json.dumps(body).encode("utf-8")
 
             await jetstream.publish(f"{STREAM_NAME}.{event}", encoded, headers=headers)
