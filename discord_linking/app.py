@@ -139,6 +139,5 @@ def mismatching_state(*_):
 
 @app.errorhandler(Exception)
 def internal_server(*_):
-    if not tracing.enabled:
-        traceback.print_exc()
+    traceback.print_exc()
     return render_template("500.html"), 500
