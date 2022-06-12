@@ -2,7 +2,7 @@ from urllib.parse import urlparse
 
 from flask import Blueprint, abort, jsonify, request
 
-from .database import User
+from .database import Link
 
 app = Blueprint("internal", __name__, template_folder="templates")
 
@@ -16,9 +16,9 @@ def before_request():
 
 @app.get("/linked")
 def linked():
-    user = User.query.filter_by(id=request.args.get("id")).first()
-    if user:
-        status = user.agreed and user.link is not None
+    link = Link.query.filter_by(id=request.args.get("id")).first()
+    if link:
+        status = link is not None and link.user.agreed
     else:
         status = False
 
